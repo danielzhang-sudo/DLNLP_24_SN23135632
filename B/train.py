@@ -94,8 +94,8 @@ def train(model, data_train, data_val, loss_fn, args):
                 outputs = model(ids, mask, token_type_ids)
                 
                 loss = loss_fn(outputs, label)
-                batch_val_loss += loss
-                val_losses_batch.append(loss/len(val_loader))
+                batch_val_loss += loss.item()
+                val_losses_batch.append(loss.item()/len(val_loader))
 
                 # validation accuracy
                 _, preds = torch.max(outputs, dim=1) # batch dim 
@@ -115,10 +115,10 @@ def train(model, data_train, data_val, loss_fn, args):
         else:
             torch.save(model.state_dict(), f'{epoch}_epoch_weights.pth')
 
-    plot_figures(train_losses.cpu().numpy(), 'train_losses.png')
-    plot_figures(train_accuracy.cpu().numpy(), 'train_accuracy.png')
-    plot_figures(val_losses.cpu().numpy(), 'val_losses.png')
-    plot_figures(val_accuracy.cpu().numpy(), 'val_accuracy.png')
+    plot_figures(train_losses, 'train_losses.png')
+    plot_figures(train_accuracy, 'train_accuracy.png')
+    plot_figures(val_losses, 'val_losses.png')
+    plot_figures(val_accuracy, 'val_accuracy.png')
     
     return train_accuracy[-1]
 

@@ -7,6 +7,7 @@ def to_latex(report):
         f.write(df.to_latex())
 
 def plot_figures(x_data, filename):
+
     fig = plt.figure(figsize=(10, 7))
     plt.plot(x_data)
     fig.savefig(filename, dpi=fig.dpi)
