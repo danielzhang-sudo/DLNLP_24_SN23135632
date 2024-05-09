@@ -1,2 +1,6 @@
 pandas
 torch
+transformers
+argparse
+matplotlib
+numpy
