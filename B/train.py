@@ -65,8 +65,6 @@ def train(model, data_train, data_val, loss_fn, args):
             correct_train_predictions += torch.sum(preds == targ)
             correct_predictions_batch = torch.sum(preds == targ)
             train_accuracy_batch.append(correct_predictions_batch/len(targ))
-
-            print(f'Epoch: {epoch}, Train_Loss:  {loss.item()}, Train_Acc:  {correct_predictions_batch/len(targ)}')
             
             optimizer.zero_grad()
             loss.backward()
@@ -75,6 +73,7 @@ def train(model, data_train, data_val, loss_fn, args):
 
         train_losses.append(batch_train_loss/len(training_loader))
         train_accuracy.append(float(correct_train_predictions)/num_train_samples)
+        print(f'Epoch: {epoch}, Train_Loss:  {loss.item()}, Train_Acc:  {float(correct_train_predictions)/num_train_samples}')
 
         batch_val_loss = 0
 
@@ -85,11 +84,12 @@ def train(model, data_train, data_val, loss_fn, args):
         with torch.no_grad():
             for batch, data in enumerate(val_loader, 0):
 
-                text, label = data.to(device)
+                ids, mask, token_type_ids, label = data
 
-                ids = text['ids'].squeeze(0).to(device)
-                mask = text['mask'].squeeze(0).to(device)
-                token_type_ids = text['token_type_ids'].squeeze(0).to(device)
+                ids = ids.to(device)
+                mask = mask.to(device)
+                token_type_ids = token_type_ids.to(device)
+                label = label.to(device)
 
                 outputs = model(ids, mask, token_type_ids)
                 
@@ -105,10 +105,10 @@ def train(model, data_train, data_val, loss_fn, args):
                 correct_predictions_batch = torch.sum(preds == targ)
                 val_accuracy_batch.append(correct_predictions_batch/len(targ))
                         
-                print(f'Epoch: {epoch}, Val_Loss:  {loss.item()}, Val_Acc:  {correct_predictions_batch/len(targ)}')
             
             val_losses.append(batch_val_loss/len(val_loader))
             val_accuracy.append(float(correct_predictions)/num_val_samples)
+            print(f'Epoch: {epoch}, Val_Loss:  {loss.item()}, Val_Acc:  {float(correct_predictions)/num_val_samples}')
         
         if val_accuracy[epoch] >= train_accuracy[epoch]:
             torch.save(model.state_dict(), f'best_epoch_{epoch}_weights.pth')
