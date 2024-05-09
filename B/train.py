@@ -74,12 +74,12 @@ def train(model, data_train, data_val, loss_fn, args):
             scheduler.step()
 
         train_losses.append(batch_train_loss/len(training_loader))
-        train_accuracy.append(float(correct_train_predictions)/num_samples)
+        train_accuracy.append(float(correct_train_predictions)/num_train_samples)
 
         batch_val_loss = 0
 
         correct_predictions = 0
-        num_samples = 0
+        num_val_samples = 0
         
         model.eval()
         with torch.no_grad():
@@ -100,7 +100,7 @@ def train(model, data_train, data_val, loss_fn, args):
                 # validation accuracy
                 _, preds = torch.max(outputs, dim=1) # batch dim 
                 _, targ = torch.max(label, dim=1)  # batch dim
-                num_samples += len(targ)  # technically adding batch size
+                num_val_samples += len(targ)  # technically adding batch size
                 correct_predictions += torch.sum(preds == targ)
                 correct_predictions_batch = torch.sum(preds == targ)
                 val_accuracy_batch.append(correct_predictions_batch/len(targ))
@@ -108,7 +108,7 @@ def train(model, data_train, data_val, loss_fn, args):
                 print(f'Epoch: {epoch}, Val_Loss:  {loss.item()}, Val_Acc:  {correct_predictions_batch/len(targ)}')
             
             val_losses.append(batch_val_loss/len(val_loader))
-            val_accuracy.append(float(correct_predictions)/num_samples)
+            val_accuracy.append(float(correct_predictions)/num_val_samples)
         
         if val_accuracy[epoch] >= train_accuracy[epoch]:
             torch.save(model.state_dict(), f'best_epoch_{epoch}_weights.pth')
