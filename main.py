@@ -7,7 +7,16 @@ from B.data import data_preprocessing
 from B.loss import ACD_loss, ACSA_loss
 
 def run(args):
-    
+    # ======================================================================================================================
+    # Data preprocessing
+    data_train, data_val, data_test = data_preprocessing(args, 'a')
+    # ======================================================================================================================
+    # Task A
+    model_A = ABSABert(args)                 # Build model object.
+    acc_A_train = train(model_A, data_train, data_val, ACD_loss, 'a', args) # Train model based on the training set (you should fine-tune your model based on validation set.)
+    acc_A_test = test(model_A, data_test, args)   # Test model based on the test set.
+    # Clean up memory/GPU etc...             # Some code to free memory if necessary.
+    torch.cuda.empty_cache()
 
     # ======================================================================================================================
     # Data preprocessing
@@ -15,7 +24,7 @@ def run(args):
     # ======================================================================================================================
     # Task B
     model_B = ABSABert(args)
-    acc_B_train = train(model_B, data_train, data_val, ACSA_loss, args)
+    acc_B_train = train(model_B, data_train, data_val, ACSA_loss, 'b', args)
     acc_B_test = test(model_B, data_test, args)
     # Clean up memory/GPU etc...
     torch.cuda.empty_cache()

@@ -5,7 +5,7 @@ from B.utils import plot_figures
 from B.config import tokenizer
 from torch.utils.data import DataLoader
 
-def train(model, data_train, data_val, loss_fn, args):
+def train(model, data_train, data_val, loss_fn, task, args):
 
     print(['#']*15)
     print('begin training...')
@@ -115,10 +115,10 @@ def train(model, data_train, data_val, loss_fn, args):
         else:
             torch.save(model.state_dict(), f'{epoch}_epoch_weights.pth')
 
-    plot_figures(train_losses, 'train_losses.png')
-    plot_figures(train_accuracy, 'train_accuracy.png')
-    plot_figures(val_losses, 'val_losses.png')
-    plot_figures(val_accuracy, 'val_accuracy.png')
+    plot_figures(train_losses, f'train_losses_task_{task}.png')
+    plot_figures(train_accuracy, f'train_accuracy_task_{task}.png')
+    plot_figures(val_losses, f'val_losses_task_{task}.png')
+    plot_figures(val_accuracy, f'val_accuracy_task_{task}.png')
     
     return train_accuracy[-1]
 
