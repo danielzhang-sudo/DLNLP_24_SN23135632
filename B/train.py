@@ -55,8 +55,8 @@ def train(model, data_train, data_val, loss_fn, args):
 
             optimizer.zero_grad()
             loss = loss_fn(outputs, label)
-            batch_train_loss += loss
-            train_losses_batch.append(loss/len(training_loader))
+            batch_train_loss += loss.item()
+            train_losses_batch.append(loss.item()/len(training_loader))
 
             # training accuracy
             _, preds = torch.max(outputs, dim=1) # batch dim 
