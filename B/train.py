@@ -110,13 +110,13 @@ def train(model, data_train, data_val, loss_fn, task, args):
             val_accuracy.append(float(correct_predictions)/num_val_samples)
             print(f'Epoch: {epoch}, Val_Loss:  {loss.item()}, Val_Acc:  {float(correct_predictions)/num_val_samples}')
         
-        if val_accuracy[epoch] >= train_accuracy[epoch]:
-            torch.save(model.state_dict(), f'best_epoch_{epoch}_weights.pth')
-        else:
-            torch.save(model.state_dict(), f'{epoch}_epoch_weights.pth')
+        
+        
+        
+        torch.save(model.state_dict(), f'{epoch}_epoch_weights.pth')
 
     plot_figures(train_losses, val_losses, f'loss_curve_task_{task}')
     plot_figures(train_accuracy, val_accuracy, f'accuracy_curve_task_{task}')
     
-    return train_accuracy[-1]
+    return train_accuracy[-1], val_accuracy[-1]
 

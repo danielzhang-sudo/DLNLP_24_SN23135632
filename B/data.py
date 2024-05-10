@@ -112,6 +112,8 @@ def get_data_A(df):
     df_one_hot = df_one_hot.groupby(df_one_hot['text']).aggregate({'aspect_term':'first', 'term_polarity':'first', 'category_polarity':'first', 'ambience':'max', 'anecdotes/miscellaneous':'max', 'food':'max', 'price':'max', 'service':'max'})
     df_one_hot = df_one_hot.reset_index()
 
+    print(df_one_hot.head())
+
     return split_dataset(df_one_hot)
 
 def get_data_B(df):

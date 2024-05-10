@@ -13,8 +13,9 @@ def run(args):
     # ======================================================================================================================
     # Task A
     model_A = ABSABert(args)                 # Build model object.
-    acc_A_train = train(model_A, data_train, data_val, ACD_loss, 'a', args) # Train model based on the training set (you should fine-tune your model based on validation set.)
-    acc_A_test = test(model_A, data_test, args)   # Test model based on the test set.
+    # model_A = model_A.to('cuda')
+    acc_A_train, acc_A_val = train(model_A, data_train, data_val, ACD_loss, 'a', args) # Train model based on the training set (you should fine-tune your model based on validation set.)
+    acc_A_test = test(model_A, data_test, 'a', args)   # Test model based on the test set.
     # Clean up memory/GPU etc...             # Some code to free memory if necessary.
     torch.cuda.empty_cache()
 
@@ -24,16 +25,17 @@ def run(args):
     # ======================================================================================================================
     # Task B
     model_B = ABSABert(args)
-    acc_B_train = train(model_B, data_train, data_val, ACSA_loss, 'b', args)
-    acc_B_test = test(model_B, data_test, args)
+    # model_B = model_B.to('cuda')
+    acc_B_train, acc_B_val = train(model_B, data_train, data_val, ACSA_loss, 'b', args)
+    acc_B_test = test(model_B, data_test, 'b', args)
     # Clean up memory/GPU etc...
     torch.cuda.empty_cache()
 
 
     # ======================================================================================================================
     ## Print out your results with following format:
-    print('TA:{},{};TB:{},{};'.format(acc_A_train, acc_A_test,
-                                                            acc_B_train, acc_B_test))
+    print('TA:{},{},{};TB:{},{},{};'.format(acc_A_train, acc_A_val, acc_A_test,
+                                                            acc_B_train, acc_B_val, acc_B_test))
 
     # If you are not able to finish a task, fill the corresponding variable with 'TBD'. For example:
     # acc_A_train = 'TBD'
