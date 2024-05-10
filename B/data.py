@@ -112,16 +112,6 @@ def get_data_A(df):
     df_one_hot = df_one_hot.groupby(df_one_hot['text']).aggregate({'aspect_term':'first', 'term_polarity':'first', 'category_polarity':'first', 'ambience':'max', 'anecdotes/miscellaneous':'max', 'food':'max', 'price':'max', 'service':'max'})
     df_one_hot = df_one_hot.reset_index()
 
-    df_one_hot.loc[df_one_hot['term_polarity'] == 'neutral', 'term_polarity'] = 0
-    df_one_hot.loc[df_one_hot['term_polarity'] == 'positive', 'term_polarity'] = 1
-    df_one_hot.loc[df_one_hot['term_polarity'] == 'conflict', 'term_polarity'] = 2
-    df_one_hot.loc[df_one_hot['term_polarity'] == 'negative', 'term_polarity'] = -1
-
-    df_one_hot.loc[df_one_hot['category_polarity'] == 'neutral', 'category_polarity'] = 0
-    df_one_hot.loc[df_one_hot['category_polarity'] == 'positive', 'category_polarity'] = 1
-    df_one_hot.loc[df_one_hot['category_polarity'] == 'conflict', 'category_polarity'] = 2
-    df_one_hot.loc[df_one_hot['category_polarity'] == 'negative', 'category_polarity'] = -1
-
     return split_dataset(df_one_hot)
 
 def get_data_B(df):
@@ -131,23 +121,15 @@ def get_data_B(df):
     for i, row in df_catsent_hot.iterrows():
         if row['category_polarity'] == 'negative':
             df_catsent_hot.loc[i, row['aspect_category']] = 1
-        elif row['category_polarity'] == 'positive':
+        elif row['category_polarity'] == 'neutral':
             df_catsent_hot.loc[i, row['aspect_category']] = 2
-        else:
+        elif row['category_polarity'] == 'conflict':
             df_catsent_hot.loc[i, row['aspect_category']] = 3
+        elif row['category_polarity'] == 'positive':
+            df_catsent_hot.loc[i, row['aspect_category']] = 4
     
     df_catsent_hot = df_catsent_hot.groupby(df_catsent_hot['text']).aggregate({'aspect_term':'first', 'term_polarity':'first', 'category_polarity':'first', 'ambience':'max', 'anecdotes/miscellaneous':'max', 'food':'max', 'price':'max', 'service':'max'})
     df_catsent_hot.reset_index(inplace=True)
-
-    df_catsent_hot.loc[df_catsent_hot['term_polarity'] == 'negative', 'term_polarity'] = -1
-    df_catsent_hot.loc[df_catsent_hot['term_polarity'] == 'neutral', 'term_polarity'] = 0
-    df_catsent_hot.loc[df_catsent_hot['term_polarity'] == 'conflict', 'term_polarity'] = 1
-    df_catsent_hot.loc[df_catsent_hot['term_polarity'] == 'positive', 'term_polarity'] = 2
-
-    df_catsent_hot.loc[df_catsent_hot['category_polarity'] == 'negative', 'category_polarity'] = -1
-    df_catsent_hot.loc[df_catsent_hot['category_polarity'] == 'neutral', 'category_polarity'] = 1
-    df_catsent_hot.loc[df_catsent_hot['category_polarity'] == 'conflict', 'category_polarity'] = 2
-    df_catsent_hot.loc[df_catsent_hot['category_polarity'] == 'positive', 'category_polarity'] = 3
 
     return split_dataset(df_catsent_hot)
 
