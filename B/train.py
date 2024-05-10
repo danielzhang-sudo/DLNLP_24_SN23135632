@@ -115,10 +115,8 @@ def train(model, data_train, data_val, loss_fn, task, args):
         else:
             torch.save(model.state_dict(), f'{epoch}_epoch_weights.pth')
 
-    plot_figures(train_losses, f'train_losses_task_{task}.png')
-    plot_figures(train_accuracy, f'train_accuracy_task_{task}.png')
-    plot_figures(val_losses, f'val_losses_task_{task}.png')
-    plot_figures(val_accuracy, f'val_accuracy_task_{task}.png')
+    plot_figures(train_losses, val_losses, f'loss_curve_task_{task}')
+    plot_figures(train_accuracy, val_accuracy, f'accuracy_curve_task_{task}')
     
     return train_accuracy[-1]
 
